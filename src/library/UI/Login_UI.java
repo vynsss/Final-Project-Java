@@ -1,37 +1,28 @@
 package library.UI;
 
-import library.DB_Access.Access;
 import library.DB_Access.Login;
-import net.proteanit.sql.DbUtils;
+import library.Library;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 public class Login_UI extends JPanel{
     Login log = new Login();
-    User_Interface ui = new User_Interface();
-    Register_UI reg = new Register_UI();
-    Access access = new Access();
 
     //panel
-    JPanel panel = new JPanel();
+    private JPanel panel = new JPanel();
     //label
-    JLabel name = new JLabel();
-    JLabel pass = new JLabel();
-    JLabel auth = new JLabel();
+    private JLabel name = new JLabel();
+    private JLabel pass = new JLabel();
+    private JLabel auth = new JLabel();
     //field
-    JTextField user_name = new JTextField(20);
-    JPasswordField password = new JPasswordField(20);
+    private JTextField user_name = new JTextField(20);
+    private JPasswordField password = new JPasswordField(20);
     //button
-    JButton login = new JButton();
-    JButton register = new JButton();
+    private JButton login = new JButton();
+    private JButton register = new JButton();
 
-    public Login_UI() throws SQLException {
-        System.out.println("Login panel");
-
+    public Login_UI() {
         //panel
         this.setLayout(new BorderLayout());
         panel.setLayout(new GridBagLayout());
@@ -86,34 +77,27 @@ public class Login_UI extends JPanel{
         this.setVisible(true);
 
         //login button action listener
-        login.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String name = user_name.getText();
-                String password_ = String.valueOf(password.getPassword());
+        login.addActionListener(e -> {
+            String name = user_name.getText();
+            String password_ = String.valueOf(password.getPassword());
 
-                if(log.auth(name, password_)){                  //if the user signed up already, it will move to the main panel
-                    removeAll();
-                    revalidate();
-                    ui.table1.setModel(DbUtils.resultSetToTableModel(access.showdata()));       //to initialize the table in the main panel
-                    add(ui);
-                }
-                else{
-                    auth.setVisible(true);
-                    user_name.setText("");
-                    password.setText("");
-                }
+            if(log.auth(name, password_)){                  //if the user signed up already, it will move to the main panel
+                Library.getWindow().setUi(new User_Interface());
+                Library.getWindow().setContentPane(Library.getWindow().getUi());
+                Library.getWindow().revalidate();
+            }
+            else{
+                auth.setVisible(true);
+                user_name.setText("");
+                password.setText("");
             }
         });
 
         //register button action listener
-        register.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                remove(panel);
-                revalidate();
-                add(reg);
-            }
+        register.addActionListener(e -> {
+            Library.getWindow().setRegister_ui(new Register_UI());
+            Library.getWindow().setContentPane(Library.getWindow().getRegister_ui());
+            Library.getWindow().revalidate();
         });
 
     }

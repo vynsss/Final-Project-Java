@@ -8,9 +8,6 @@ public class Book {
     Connection connect = new Connection();
     Login login = new Login();
 
-    public Book(){
-    }
-
     public void add_Book(int book_id){
         try {
             PreparedStatement prepStat = connect.getPrepstat("INSERT INTO storage " +

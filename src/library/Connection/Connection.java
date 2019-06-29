@@ -6,13 +6,11 @@ public class Connection {
     private String path = "jdbc:mysql://localhost:3306/library1";
     private String username = "root";
     private String password = "085775643128";
-    java.sql.Connection myConn = null;
-    Statement myStat = null;
+    public java.sql.Connection myConn = null;
 
     public Connection() {
         try {
             myConn = DriverManager.getConnection(path, username, password);
-            myStat = myConn.createStatement();
 
         } catch (SQLException e) {
             e.printStackTrace();

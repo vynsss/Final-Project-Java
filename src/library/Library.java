@@ -8,17 +8,15 @@ package library;
 
 import library.UI.Window;
 
-import java.sql.*;
-
 
 public class Library {
+	private static Window window;
+
 	public static void main(String[] args) {
+		window = new Window();
+	}
 
-		try {
-			Window window = new Window();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public static Window getWindow() {
+		return window;
 	}
 }

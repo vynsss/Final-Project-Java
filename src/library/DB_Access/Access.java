@@ -5,15 +5,14 @@ import library.Connection.Connection;
 import javax.swing.*;
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class Access {
     Connection connect = new Connection();
     Book book = new Book();
     Login login = new Login();
-
-    public Access() throws SQLException {
-    }
 
     public boolean checkid(int id) {
         try {
@@ -33,35 +32,51 @@ public class Access {
         return false;
     }
 
-    //to show the data and access it in the JTable in the User_Interface
-    public ResultSet showdata() {
+    public ArrayList<HashMap<String, String>> showdata() {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
             //to show the data based on the user
             PreparedStatement prepStat = connect.getPrepstat( "SELECT book_id, Title, Author FROM books " +
                     "INNER JOIN storage ON books.book_id = storage.book_id_store " +
                     "WHERE user_id = ?");
+//            Array array = connect.getMyConn().createArrayOf("INT", book_data.Data().toArray());
             prepStat.setString(1, login.get_userID());
             ResultSet myRs = prepStat.executeQuery();
-            System.out.println("Data Showed!");
-            return myRs;
+            while (myRs.next())
+            {
+                HashMap<String, String> row = new HashMap<>();
+                row.put("book_id", Integer.toString(myRs.getInt("book_id")));
+                row.put("Title", myRs.getString("Title"));
+                row.put("Author", myRs.getString("Author"));
+                result.add(row);
+            }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    //to search the data and show the data in the JTable in the User_Interface
-    public ResultSet searchdata(String Title) {
+    public ArrayList<HashMap<String, String>> searchdata(String title) {
+        ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
-            //to show the data based on the user and the title
+            //to show the data based on the user
             PreparedStatement prepStat = connect.getPrepstat("SELECT book_id, Title, Author FROM books " +
                     "INNER JOIN storage ON books.book_id = storage.book_id_store " +
                     "WHERE user_id = ? AND Title = ?");
+//            Array array = connect.getMyConn().createArrayOf("INT", book_data.Data().toArray());
             prepStat.setString(1, login.get_userID());
-            prepStat.setString(2, Title);
+            prepStat.setString(2, title);
             ResultSet myRs = prepStat.executeQuery();
-
-            return myRs;
+            while (myRs.next())
+            {
+                HashMap<String, String> row = new HashMap<>();
+                row.put("book_id", Integer.toString(myRs.getInt("book_id")));
+                row.put("Title", myRs.getString("Title"));
+                row.put("Author", myRs.getString("Author"));
+                result.add(row);
+            }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,7 +133,7 @@ public class Access {
                 File file = new File(file_loc);
                 FileOutputStream output = new FileOutputStream(file);
 
-                while (result.next()) {
+                if (result.next()) {
                     InputStream input = result.getBinaryStream("Loc");          //to read the binary of the file in stream
                     byte[] buffer = new byte[1024];
                     while (input.read(buffer) > 0) {
@@ -155,7 +170,7 @@ public class Access {
     }
 
     //to generate random value for the book id
-    public int random_number(){
+    private int random_number(){
         Random random = new Random();
         int id = random.nextInt(Integer.MAX_VALUE);
         /*to check if the id is used or not

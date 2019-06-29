@@ -1,13 +1,13 @@
 package library.UI;
 
 import library.DB_Access.Access;
-import net.proteanit.sql.DbUtils;
+import library.Library;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 public class User_Interface extends JPanel{
     private JPanel panel1;
@@ -24,18 +24,14 @@ public class User_Interface extends JPanel{
     private JButton browseButton;
     private JTextField searchT;
     private JButton searchButton;
-    private JButton cancelButton1;
+    private JButton logoutButton;
 
-    Access access = new Access();
+    Access access;
 
-    public User_Interface() throws SQLException {
-        System.out.println("User Interface panel");
-
+    public User_Interface(){
         this.setLayout(new BorderLayout());
         panel1.setLayout(new GridBagLayout());
         this.add(panel1, BorderLayout.CENTER);
-
-        table1.setModel(DbUtils.resultSetToTableModel(access.showdata()));
 
         //button to add the data in the add section
         add_button.addActionListener(new ActionListener() {
@@ -46,20 +42,16 @@ public class User_Interface extends JPanel{
                 String Author = author.getText();
                 String Loc = loc.getText();
 
-                if(Title == "" || Author == "" ||  Loc == ""){
-                    JOptionPane.showMessageDialog(null, "Please fill all of the required data!");
-                }
-                else{
-                    access.add_data(Title, Author, Loc);
-                }
+                access.add_data(Title, Author, Loc);
 
-                //to update the table each time the user add a value.
-                table1.setModel(DbUtils.resultSetToTableModel(access.showdata()));
                 //to set the text field to null after every add
                 title.setText("");
                 author.setText("");
                 loc.setText("");
 
+                Library.getWindow().setUi(new User_Interface());
+                Library.getWindow().setContentPane(Library.getWindow().getUi());
+                Library.getWindow().revalidate();
             }
         });
 
@@ -96,7 +88,10 @@ public class User_Interface extends JPanel{
                     JOptionPane.showMessageDialog(null, "The book you are trying to retrieve does not exist, please try again!");
                 }
 
-                table1.setModel(DbUtils.resultSetToTableModel(access.showdata()));
+                Library.getWindow().setUi(new User_Interface());
+                Library.getWindow().setContentPane(Library.getWindow().getUi());
+                Library.getWindow().revalidate();
+
                 rID.setText("");
                 File.setText("");
             }
@@ -114,21 +109,37 @@ public class User_Interface extends JPanel{
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                setEnabled(false);
                 String Title = searchT.getText();
-                table1.setModel(DbUtils.resultSetToTableModel(access.searchdata(Title)));
+                Search_window search_window = new Search_window(Title);
             }
         });
 
-        //to reset the content of the search strings and return the data in the table to the original dara in the view section
-        cancelButton1.addActionListener(new ActionListener() {
+        logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                table1.setModel(DbUtils.resultSetToTableModel(access.showdata()));
-                searchT.setText("");
+                Library.getWindow().setContentPane(Library.getWindow().getLogin());
+                Library.getWindow().revalidate();
             }
         });
-
     }
 
+    private void createUIComponents() {
+        this.access = new Access();
+        // TODO: place custom component creation code here
 
+        String[][] temps = new String[access.showdata().size()][3];
+        int counter = 0;
+        for (HashMap<String, String> row : access.showdata())
+        {
+            String id = row.get("book_id");
+            String title = row.get("Title");
+            String author = row.get("Author");
+            temps[counter][0] = id;
+            temps[counter][1] = title;
+            temps[counter][2] = author;
+            counter++;
+        }
+        table1 = new JTable(temps, new String[] {"id", "Title", "Author"});
+    }
 }

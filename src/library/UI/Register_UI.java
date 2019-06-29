@@ -1,35 +1,32 @@
 package library.UI;
 
 import library.DB_Access.Register;
+import library.Library;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 public class Register_UI extends JPanel{
     Register reg = new Register();
-    User_Interface ui = new User_Interface();
 
     //panel
-    JPanel panel = new JPanel();
+    private JPanel panel = new JPanel();
     //label
-    JLabel name = new JLabel();
-    JLabel pass = new JLabel();
-    JLabel auth = new JLabel();
+    private JLabel name = new JLabel();
+    private JLabel pass = new JLabel();
+    private JLabel auth = new JLabel();
     //field
-    JTextField user_name = new JTextField(20);
-    JPasswordField password = new JPasswordField(20);
+    private JTextField user_name = new JTextField(20);
+    private JPasswordField password = new JPasswordField(20);
     //button
-    JButton register = new JButton();
+    private JButton register = new JButton();
+    private JButton cancel = new JButton();
 
-    public Register_UI() throws SQLException {
-        System.out.println("Register panel");
-
+    public Register_UI() {
         //panel
         this.setLayout(new BorderLayout());
-        this.setBackground(Color.DARK_GRAY);
         panel.setLayout(new GridBagLayout());
         panel.setSize(new Dimension(300, 400));
         this.add(panel, BorderLayout.CENTER);
@@ -64,9 +61,9 @@ public class Register_UI extends JPanel{
         panel.add(register, c);
 
         //cancel button
-//        cancel.setText("Cancel");
-//        c.gridx = 0; c.gridy = 3; c.gridwidth = 2;
-//        panel.add(cancel, c);
+        cancel.setText("Cancel");
+        c.gridx = 0; c.gridy = 3; c.gridwidth = 2;
+        panel.add(cancel, c);
 
         //text label for authentication purpose
         auth.setText("The user with this ID is already listed!");
@@ -89,15 +86,24 @@ public class Register_UI extends JPanel{
                 //execute if there is no person with the user name or password entered
                 if(!reg.check_user(name, password_)){
                     reg.register(name, password_);
-                    remove(panel);
-                    revalidate();
-                    add(ui);
+                    Library.getWindow().setLogin(new Login_UI());
+                    Library.getWindow().setContentPane(Library.getWindow().getLogin());
+                    Library.getWindow().revalidate();
                 }
                 else{
                     auth.setVisible(true);
                     user_name.setText("");
                     password.setText("");
                 }
+            }
+        });
+
+        cancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Library.getWindow().setLogin(new Login_UI());
+                Library.getWindow().setContentPane(Library.getWindow().getLogin());
+                Library.getWindow().revalidate();
             }
         });
 

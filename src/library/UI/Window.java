@@ -2,15 +2,14 @@ package library.UI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.SQLException;
 
 public class Window extends JFrame{
-    public Login_UI login = new Login_UI();
-    public User_Interface ui = new User_Interface();
-    public Register_UI reg = new Register_UI();
+    private Login_UI login = new Login_UI();
+    private Register_UI register_ui;
+    private User_Interface ui;
     private String icon = "pic.jpg";        //for icon image of the application
 
-    public Window() throws SQLException {
+    public Window() {
         this.setTitle("Library");
         this.setMinimumSize(new Dimension(800, 400));
         this.setMaximumSize(new Dimension(1000, 600));
@@ -23,7 +22,31 @@ public class Window extends JFrame{
         this.setVisible(true);
     }
 
-    private void setIconImage(String s) {
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource(s)));
+    private void setIconImage(String img) {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource(img)));
+    }
+
+    public Login_UI getLogin() {
+        return login;
+    }
+
+    public void setLogin(Login_UI login) {
+        this.login = login;
+    }
+
+    public Register_UI getRegister_ui() {
+        return register_ui;
+    }
+
+    public void setRegister_ui(Register_UI register_ui) {
+        this.register_ui = register_ui;
+    }
+
+    public User_Interface getUi() {
+        return ui;
+    }
+
+    public void setUi(User_Interface ui) {
+        this.ui = ui;
     }
 }
