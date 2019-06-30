@@ -109,7 +109,6 @@ public class User_Interface extends JPanel{
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setEnabled(false);
                 String Title = searchT.getText();
                 Search_window search_window = new Search_window(Title);
             }

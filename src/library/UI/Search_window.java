@@ -1,7 +1,6 @@
 package library.UI;
 
 import library.DB_Access.Access;
-import library.Library;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,36 +20,29 @@ public class Search_window extends JFrame {
         this.setTitle("Search!");
         //panel
         this.setLayout(new BorderLayout());
-        this.setSize(new Dimension(300, 150));
+        this.setSize(new Dimension(450, 250));
         panel.setLayout(new GridBagLayout());
         panel.setSize(new Dimension(300, 150));
         this.add(panel, BorderLayout.CENTER);
-
-        this.addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                Library.getWindow().getUi().setEnabled(true);
-            }
-        });
 
         this.setLocationRelativeTo(null);
 
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(3,3,3,3);
 
-        IDlbl.setText("ID                   ");
+        IDlbl.setText("  ID                   ");
         IDlbl.setFont(new Font("Helvetuca Neue", Font.BOLD, 10));
         IDlbl.setHorizontalAlignment(SwingConstants.CENTER);
         c.gridx = 0; c.gridy = 0; c.gridwidth = 1;
         panel.add(IDlbl, c);
 
-        Titlelbl.setText("Title             ");
+        Titlelbl.setText("  Title             ");
         Titlelbl.setFont(new Font("Helvetuca Neue", Font.BOLD, 10));
         Titlelbl.setHorizontalAlignment(SwingConstants.CENTER);
         c.gridx = 1; c.gridy = 0; c.gridwidth = 1;
         panel.add(Titlelbl, c);
 
-        Authorlbl.setText("Author           ");
+        Authorlbl.setText("  Author           ");
         Authorlbl.setFont(new Font("Helvetuca Neue", Font.BOLD, 10));
         Authorlbl.setHorizontalAlignment(SwingConstants.CENTER);
         c.gridx = 2; c.gridy = 0; c.gridwidth = 1;
