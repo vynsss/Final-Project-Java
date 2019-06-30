@@ -9,6 +9,7 @@ public class Login {
 
     private static String user;                 //to store the user id from the login and be used in other class
 
+    //to check whether the there is an user with the name and password entered
     public boolean auth(String name, String password){
         try {
             PreparedStatement prepStat = connect.getPrepstat("SELECT user_id, user_name, pass FROM login " +
@@ -17,7 +18,7 @@ public class Login {
             prepStat.setString(2, password);
             ResultSet myRs = prepStat.executeQuery();
             if(myRs.next()){
-                user = myRs.getString("user_id");
+                user = myRs.getString("user_id");               //to store the user id from the logged user
                 System.out.println("User " + myRs.getString("user_name") + " Successfully Logged In!");
                 return true;
             }
@@ -33,10 +34,6 @@ public class Login {
 
     public String get_userID(){
         return user;
-    }
-
-    public void set_userID(String userID){
-        user = userID;
     }
 
 }

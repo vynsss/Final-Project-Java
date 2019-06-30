@@ -16,6 +16,7 @@ public class Library {
 		window = new Window();
 	}
 
+	//set to be static so it can change the panel in the user interface easily
 	public static Window getWindow() {
 		return window;
 	}

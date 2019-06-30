@@ -7,10 +7,10 @@ import java.util.UUID;
 
 public class Register {
     Connection connect = new Connection();
-    Login login = new Login();
 
-    private String random = random_UUID();
+    private String random = random_UUID();      //to store the randomized if
 
+    //to store the name and password and the randomized user id to the user table
     public void register(String user_name, String password){
         try {
             PreparedStatement prepStat = connect.getPrepstat("INSERT INTO login " +
@@ -20,7 +20,6 @@ public class Register {
             prepStat.setString(3, password);
             int i = prepStat.executeUpdate();
             if(i > 0){
-                login.set_userID(random);
                 System.out.println( "Successfully Registered!");
             }
         } catch (SQLException e) {
@@ -28,6 +27,7 @@ public class Register {
         }
     }
 
+    //to randomized the user id
     private String random_UUID(){
         UUID uuid = UUID.randomUUID();
         String random = uuid.toString();
@@ -43,6 +43,7 @@ public class Register {
         return random;
     }
 
+    //to check whether the randomized user id is already taken or not
     private boolean check_userID(String id){
         try {
             PreparedStatement prepStat = connect.getPrepstat("SELECT user_id FROM login " +

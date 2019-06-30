@@ -8,6 +8,7 @@ public class Connection {
     private String password = "085775643128";
     public java.sql.Connection myConn = null;
 
+    //so the other class can get the connection from the same database
     public Connection() {
         try {
             myConn = DriverManager.getConnection(path, username, password);
@@ -19,6 +20,7 @@ public class Connection {
         }
     }
 
+    //so the other class can directly use this method to get the prepared statement
     public PreparedStatement getPrepstat(String query) {
         try {
             PreparedStatement prepStat = myConn.prepareStatement(query);

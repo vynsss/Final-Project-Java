@@ -14,6 +14,7 @@ public class Access {
     Book book = new Book();
     Login login = new Login();
 
+    //to check whether the book id already taken or not
     public boolean checkid(int id) {
         try {
             PreparedStatement prepStat = connect.getPrepstat("SELECT book_id FROM books " +
@@ -32,18 +33,20 @@ public class Access {
         return false;
     }
 
+    //to return the result of the array list and return it to be accessed in the JTable
     public ArrayList<HashMap<String, String>> showdata() {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
-            //to show the data based on the user
+            /*the inner join is to check whether inside the storage table
+            * it check the book id of the user and get the data of the book in the books table*/
             PreparedStatement prepStat = connect.getPrepstat( "SELECT book_id, Title, Author FROM books " +
                     "INNER JOIN storage ON books.book_id = storage.book_id_store " +
                     "WHERE user_id = ?");
-//            Array array = connect.getMyConn().createArrayOf("INT", book_data.Data().toArray());
             prepStat.setString(1, login.get_userID());
             ResultSet myRs = prepStat.executeQuery();
             while (myRs.next())
             {
+                //to store the row of data and store it in the arraylist
                 HashMap<String, String> row = new HashMap<>();
                 row.put("book_id", Integer.toString(myRs.getInt("book_id")));
                 row.put("Title", myRs.getString("Title"));
@@ -57,14 +60,14 @@ public class Access {
         return null;
     }
 
+    //to return the data based on the searched title
     public ArrayList<HashMap<String, String>> searchdata(String title) {
         ArrayList<HashMap<String, String>> result = new ArrayList<>();
         try {
-            //to show the data based on the user
+            //to show the data based on the user and the title searched
             PreparedStatement prepStat = connect.getPrepstat("SELECT book_id, Title, Author FROM books " +
                     "INNER JOIN storage ON books.book_id = storage.book_id_store " +
                     "WHERE user_id = ? AND Title = ?");
-//            Array array = connect.getMyConn().createArrayOf("INT", book_data.Data().toArray());
             prepStat.setString(1, login.get_userID());
             prepStat.setString(2, title);
             ResultSet myRs = prepStat.executeQuery();
@@ -83,7 +86,7 @@ public class Access {
         return null;
     }
 
-    //to add the data to the mySQL table
+    //to add the data to the books table in the database
     public void add_data(String title, String author, String file_loc){
         try {
             /*to initialize the insert query into the database
@@ -104,7 +107,7 @@ public class Access {
 
             int i = prepStat.executeUpdate();
             if (i > 0) {
-                book.add_Book(random);
+                book.add_Book(random);                  //to add the data into the storage table too
                 JOptionPane.showMessageDialog(null, "Data is added");
             } else {
                 JOptionPane.showMessageDialog(null, "Data is not saved");
@@ -117,14 +120,13 @@ public class Access {
         }
     }
 
-    //to retreive and delete the data form mySQL table
+    //to retrieve and delete the data form books table
     public void retreive_data(int id, String file_loc) {
-        if(book.check_book(id)) {
+        if(book.check_book(id)) {                   //it will first check whether the user have that book
             try {
-            /*to set the query to store the Loc if the title is equal to ?
-            executing the query and storing the data of the Loc*/
+                /*to set the query to store the Loc if the title is equal to ?
+                executing the query and storing the data of the Loc*/
                 PreparedStatement prepStat = connect.getPrepstat("SELECT Loc FROM books WHERE book_id=?");
-                //to set the RTitle to the parameter of the query
                 prepStat.setInt(1, id);
 
                 ResultSet result = prepStat.executeQuery();
@@ -144,10 +146,14 @@ public class Access {
                     PreparedStatement pdsmt = connect.getPrepstat("delete from books " +
                             "WHERE book_id = ?");
                     pdsmt.setInt(1, id);
-                    pdsmt.executeUpdate();
+                    int i = pdsmt.executeUpdate();
+                    if(i > 0){
+                        book.remove_book(id);                   //to remove the book data from the tables
+                        JOptionPane.showMessageDialog(null, "Book retrieved successfully. Writing to file " + file.getAbsolutePath());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Data is unsuccessfully removed");
+                    }
 
-                    book.remove_book(id);
-                    JOptionPane.showMessageDialog(null, "Book retrieved successfully. Writing to file " + file.getAbsolutePath());
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

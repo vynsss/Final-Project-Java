@@ -49,6 +49,7 @@ public class User_Interface extends JPanel{
                 author.setText("");
                 loc.setText("");
 
+                //to change the panel of the window
                 Library.getWindow().setUi(new User_Interface());
                 Library.getWindow().setContentPane(Library.getWindow().getUi());
                 Library.getWindow().revalidate();
@@ -123,10 +124,13 @@ public class User_Interface extends JPanel{
         });
     }
 
+    //to set the content of the table
     private void createUIComponents() {
         this.access = new Access();
         // TODO: place custom component creation code here
 
+        /*the rows of the arrays depend on the size of the arraylist of the show data
+        * and to store the result of the rows from arraylist to the hashmap*/
         String[][] temps = new String[access.showdata().size()][3];
         int counter = 0;
         for (HashMap<String, String> row : access.showdata())

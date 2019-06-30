@@ -22,10 +22,12 @@ public class Window extends JFrame{
         this.setVisible(true);
     }
 
+    //to set the icon image of the application
     private void setIconImage(String img) {
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource(img)));
     }
 
+    //setter and getter to change the panel in the frame
     public Login_UI getLogin() {
         return login;
     }

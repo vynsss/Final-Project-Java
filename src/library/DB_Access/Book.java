@@ -8,6 +8,7 @@ public class Book {
     Connection connect = new Connection();
     Login login = new Login();
 
+    //to add the data based on the book id generated and the user to the storage table
     public void add_Book(int book_id){
         try {
             PreparedStatement prepStat = connect.getPrepstat("INSERT INTO storage " +
@@ -26,6 +27,7 @@ public class Book {
         }
     }
 
+    //to remove the data from the storage table
     public void remove_book(int book_id){
         try {
             PreparedStatement prepStat = connect.getPrepstat("DELETE FROM storage " +
@@ -47,6 +49,7 @@ public class Book {
         }
     }
 
+    //to check whether the id is owned by the user or not
     public boolean check_book(int book_id){
         try {
             PreparedStatement prepStat = connect.getPrepstat("SELECT * FROM storage " +
